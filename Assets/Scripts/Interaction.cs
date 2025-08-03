@@ -16,8 +16,11 @@ public class Interaction : MonoBehaviour
         Debug.Log("Clicked E!");
         if (current_obj_looked?.collider.gameObject.layer == LayerMask.NameToLayer("Interactable"))
         {
-            Debug.Log("Touching " + current_obj_looked?.collider.gameObject.name);
-            // TODO Add to inventory
+            String obj_name = current_obj_looked?.collider.gameObject.name;
+            Debug.Log("Picking up " + obj_name);
+            
+            InventorySystem.Instance.AddItem(obj_name, 1);
+
             Destroy(current_obj_looked?.collider.gameObject);
         }
         
