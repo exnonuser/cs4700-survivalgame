@@ -14,6 +14,8 @@ public class InventorySystem : MonoBehaviour
     public bool isOpen;
 
     public List<Item> inventory;
+    private const int MAX_ROWS = 3;
+    private const int MAX_COLS = 8;
 
     private void Awake()
     {
@@ -33,6 +35,7 @@ public class InventorySystem : MonoBehaviour
         // Method for adding items to an inventory
         Item item_obj = new Item(name, amount);
         item_obj.Icon = Resources.Load<GameObject>("Inventory Items/" + name);
+
         // First check if item already exists in inventory
         if (inventory.Contains(item_obj))
         {
@@ -64,9 +67,19 @@ public class InventorySystem : MonoBehaviour
         // Clear inventory
         for (int i = 0; i < MAX_SLOTS; i++)
         {
+            
             Transform slot = inventoryScreenUI.transform.GetChild(i);
-            if (slot.childCount > 0)
-                Destroy(slot.GetChild(0).gameObject);
+            if (slot.childCount > 0) {
+                // Store positions into inventory first
+                GameObject image = slot.GetChild(0).gameObject;
+                int row = (int) Mathf.Floor(i / MAX_COLS);
+                int col = i % MAX_COLS;
+                Debug.Log("Found" + image.name);
+
+                inventory.Find(item => item.name == image.name).grid_pos = new Vector2(row, col);
+                // Remove image from ui
+                Destroy(image);
+            }
         }
 
         // Add items from inventory into slots
@@ -74,8 +87,11 @@ public class InventorySystem : MonoBehaviour
         foreach (Item item in inventory)
         {
             if (j > MAX_SLOTS) break; // Case where inventory is bigger than UI inventory
-            Transform slot = inventoryScreenUI.transform.GetChild(j);
+            int row = (int)item.grid_pos.x;
+            int col = (int)item.grid_pos.y;
+            Transform slot = inventoryScreenUI.transform.GetChild(row * MAX_COLS + col);
             GameObject icon_copy = Instantiate(item.Icon, slot);
+            icon_copy.name = item.name;
             j++;
         }
     }
