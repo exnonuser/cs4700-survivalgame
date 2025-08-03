@@ -32383,7 +32383,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2113453543359413483, guid: 1cdc517acd04adf4a8623a89766fcfe8, type: 3}
       propertyPath: m_Name
-      value: Large Stone
+      value: Armor_INV
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
