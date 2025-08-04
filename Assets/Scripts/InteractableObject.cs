@@ -13,11 +13,21 @@ public class InteractableObject : MonoBehaviour
         return ItemName;
     }
 
-    void Update(){
-        if (Input.GetKeyDown(KeyCode.Mouse0)&&playerInRange&& SelectionManager.Instance.onTarget)
+    void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Mouse0)&&playerInRange&& SelectionManager.Instance.currentTarget==this)
         {
-            Debug.Log("Item Added to Inventory");
-            Destroy(gameObject);
+
+            if (!InventorySystem.Instance.CheckIfFull()) 
+            {
+                InventorySystem.Instance.AddToInventory(ItemName);
+                Debug.Log("Item Added to Inventory");
+                Destroy(gameObject);
+            }
+
+            else {
+                Debug.Log("Inventory is full.");
+            }
         }
     }
 

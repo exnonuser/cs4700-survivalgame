@@ -8,15 +8,14 @@ public class SelectionManager : MonoBehaviour
 {
     public static SelectionManager Instance {get;set;}
 
-
-    public bool onTarget;
+    public InteractableObject currentTarget {get; set;}
+    public bool onTarget => currentTarget != null;
 
     public GameObject interaction_Info_UI;
     Text interaction_text;
  
     private void Start()
     {
-        onTarget = false;
         interaction_text = interaction_Info_UI.GetComponent<Text>();
     }
  
@@ -32,31 +31,37 @@ public class SelectionManager : MonoBehaviour
 
     void Update()
     {
+        UpdateSelection();
+    }
+
+    void UpdateSelection()
+    {
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
         RaycastHit hit;
+
         if (Physics.Raycast(ray, out hit))
         {
-            var selectionTransform = hit.transform;
-
-            InteractableObject interactable = selectionTransform.GetComponent<InteractableObject>();
- 
-            if (interactable && interactable.playerInRange)
+            var interactable = hit.transform.GetComponent<InteractableObject>();
+            if (interactable != null && interactable.playerInRange)
             {
-                onTarget = true;
-                interaction_text.text = interactable.GetItemName();
-                interaction_Info_UI.SetActive(true);
+                SetTarget(interactable);
+                return;
             }
-            else 
-            { 
-                onTarget = false;
-                interaction_Info_UI.SetActive(false);
-            }
- 
         }
-        else 
-            { 
-                onTarget = false;
-                interaction_Info_UI.SetActive(false);
-            }
+
+        ClearTarget();
+    }
+
+    public void SetTarget(InteractableObject obj)
+    {
+        currentTarget = obj;
+        interaction_text.text = obj.GetItemName();
+        interaction_Info_UI.SetActive(true);
+    }
+
+    public void ClearTarget()
+    {
+        currentTarget = null;
+        interaction_Info_UI.SetActive(false);
     }
 }

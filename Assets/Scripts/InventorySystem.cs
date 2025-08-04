@@ -12,6 +12,17 @@ public class InventorySystem : MonoBehaviour
  
     public GameObject inventoryScreenUI;
     public bool isOpen;
+    public GameObject CrosshairUI;
+
+    public List<GameObject> slotList = new List<GameObject>();
+
+    public List<string> itemList = new List<string>();
+
+    private GameObject itemToAdd;
+
+    private GameObject whatSlotToEquip;
+
+    //public bool isFull;
 
     public List<Item> inventory;
     private const int MAX_ROWS = 3;
@@ -59,8 +70,20 @@ public class InventorySystem : MonoBehaviour
     void Start()
     {
         isOpen = false;
+        //isFull = false;
+
+        PopulateSlotList();
     }
 
+    private void PopulateSlotList(){
+        foreach (Transform child in inventoryScreenUI.transform){
+            if (child.CompareTag("Slot")){
+                slotList.Add(child.gameObject);
+            }
+        }
+    }
+
+    /*
     private void update_inventory()
     {
         int MAX_SLOTS = inventoryScreenUI.transform.childCount;
@@ -95,6 +118,7 @@ public class InventorySystem : MonoBehaviour
             j++;
         }
     }
+    */
 
     void Update()
     {
@@ -102,12 +126,13 @@ public class InventorySystem : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.I) && !isOpen)
         {
 
+            isOpen = true;
             Debug.Log("i is pressed");
+            CrosshairUI.SetActive(!isOpen);
             Cursor.lockState = CursorLockMode.None;
             inventoryScreenUI.SetActive(true);
-            isOpen = true;
             // Update inventory
-            update_inventory();
+            //update_inventory();
         }
         else if (Input.GetKeyDown(KeyCode.I) && isOpen)
         {
@@ -115,6 +140,44 @@ public class InventorySystem : MonoBehaviour
             inventoryScreenUI.SetActive(false);
             isOpen = false;
         }
+    }
+
+    public void AddToInventory(string ItemName){
+        whatSlotToEquip = FindNextEmptySlot();
+
+        itemToAdd = Instantiate(Resources.Load<GameObject>("InventoryItems/" + ItemName), whatSlotToEquip.transform);
+        itemToAdd.transform.localPosition = Vector3.zero;
+        itemToAdd.transform.localRotation = Quaternion.identity;
+        itemToAdd.transform.localScale = Vector3.one;
+        itemToAdd.transform.SetParent(whatSlotToEquip.transform);
+        itemList.Add(ItemName);
+    }
+
+    private GameObject FindNextEmptySlot(){
+        foreach (GameObject slot in slotList){
+            if (slot.transform.childCount == 0){
+                return slot;
+            }
+        }
+        return new GameObject();
+    }
+
+    public bool CheckIfFull(){
+        int counter = 0;
+
+        foreach (GameObject slot in slotList){
+         if (slot.transform.childCount > 0) {
+            counter += 1;
+         }
+        }
+
+         if (counter == 24) {
+            return true;
+         }
+
+         else {
+            return false;
+         }
     }
  
 }
