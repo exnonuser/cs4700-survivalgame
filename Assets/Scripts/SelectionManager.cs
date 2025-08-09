@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
  
 public class SelectionManager : MonoBehaviour
 {
@@ -12,11 +13,11 @@ public class SelectionManager : MonoBehaviour
     public bool onTarget => currentTarget != null;
 
     public GameObject interaction_Info_UI;
-    Text interaction_text;
+    TextMeshProUGUI interaction_text;
  
     private void Start()
     {
-        interaction_text = interaction_Info_UI.GetComponent<Text>();
+        interaction_text = interaction_Info_UI.GetComponentInChildren<TextMeshProUGUI>();
     }
  
     private void Awake()
@@ -48,7 +49,6 @@ public class SelectionManager : MonoBehaviour
                 return;
             }
         }
-
         ClearTarget();
     }
 

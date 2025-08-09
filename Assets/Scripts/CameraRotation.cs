@@ -10,21 +10,18 @@ public class MouseMovement : MonoBehaviour
     float xRotation = 0f;
     float YRotation = 0f;
 
- 
     void Start()
     {
-      //Locking the cursor to the middle of the screen and making it invisible
       Cursor.lockState = CursorLockMode.Locked;
-      //Cursor.visible = false; makes cursor invisible
     }
  
     void Update()
     {
-      if (!InventorySystem.Instance.isOpen)
+      if (!InventorySystem.Instance.isOpen && !CraftingSystem.Instance.isOpen)
       {
        float mouseX = Input.GetAxisRaw("Mouse X") * mouseSensitivity * Time.deltaTime;
        float mouseY = Input.GetAxisRaw("Mouse Y") * mouseSensitivity * Time.deltaTime;
- 
+
        //control rotation around x axis (Look up and down)
        xRotation -= mouseY;
  
