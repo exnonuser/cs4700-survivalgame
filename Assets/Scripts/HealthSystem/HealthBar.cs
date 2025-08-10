@@ -24,6 +24,6 @@ public class HealthBar : MonoBehaviour
         maxHealth = playerState.GetComponent<PlayerState>().maxHealth;
 
         float fill = currentHealth / maxHealth;
-        slider.value = fill;
+        slider.value = Mathf.Lerp(slider.value, fill, 5f * Time.deltaTime); // Lerp for smoothing value changes
     }
 }

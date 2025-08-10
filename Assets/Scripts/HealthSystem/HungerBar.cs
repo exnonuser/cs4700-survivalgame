@@ -24,6 +24,6 @@ public class HungerBar : MonoBehaviour
         maxHunger = playerState.GetComponent<PlayerState>().maxHunger;
 
         float fill = currentHunger / maxHunger;
-        slider.value = fill;
+        slider.value = Mathf.Lerp(slider.value, fill, 5f * Time.deltaTime);
     }
 }

@@ -43,6 +43,7 @@ public class PlayerState : MonoBehaviour
         
         if (Input.GetKeyDown(KeyCode.N))
         {
+            
             currentHealth -= 10f;
         }
     }
@@ -50,6 +51,7 @@ public class PlayerState : MonoBehaviour
     IEnumerator HealthRegen(float regen_time, float regen_amount)
     {
         while (true) {
+            
             currentHealth += regen_amount;
             yield return new WaitForSeconds(regen_time);
         }

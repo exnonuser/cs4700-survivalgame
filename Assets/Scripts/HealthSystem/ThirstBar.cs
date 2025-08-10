@@ -24,6 +24,6 @@ public class ThirstBar : MonoBehaviour
         maxThirst = playerState.GetComponent<PlayerState>().maxHydration;
 
         float fill = currentThirst / maxThirst;
-        slider.value = fill;
+        slider.value = Mathf.Lerp(slider.value, fill, 5f * Time.deltaTime);
     }
 }
