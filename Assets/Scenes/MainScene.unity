@@ -5626,6 +5626,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   inventoryScreenUI: {fileID: 1950913012}
   isOpen: 0
+  CrosshairUI: {fileID: 2013040339}
+  slotList: []
+  itemList: []
 --- !u!4 &346253042
 Transform:
   m_ObjectHideFlags: 0
@@ -22738,7 +22741,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2feb4fd8eaeb87041a3e551cf02ba975, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  onTarget: 0
   interaction_Info_UI: {fileID: 2013040339}
 --- !u!4 &1523492033
 Transform:
