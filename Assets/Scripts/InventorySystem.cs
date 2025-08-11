@@ -149,7 +149,6 @@ public class InventorySystem : MonoBehaviour
 
     public void AddToInventory(string ItemName){
         whatSlotToEquip = FindNextEmptySlot();
-
         itemToAdd = Instantiate(Resources.Load<GameObject>("InventoryItems/" + ItemName), whatSlotToEquip.transform);
         itemToAdd.transform.localPosition = Vector3.zero;
         itemToAdd.transform.localRotation = Quaternion.identity;
