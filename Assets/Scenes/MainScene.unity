@@ -24976,6 +24976,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: healing campfire
       objectReference: {fileID: 0}
+    - target: {fileID: 1841473030161621035, guid: 83e12acfde0797044a103b3a93f44a48, type: 3}
+      propertyPath: m_TagString
+      value: Food
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects:
