@@ -52,8 +52,6 @@ public class CraftingSystem : MonoBehaviour
 
         craftAxeButton = toolsScreenUI.transform.Find("Axe").transform.Find("Button").GetComponent<Button>();
         craftAxeButton.onClick.AddListener(delegate{CraftAnyItem(AxeBLP);});
-        Debug.Log(AxeBLP.itemName);
-
     }
 
     void OpenToolsCategory ()
@@ -118,7 +116,7 @@ public class CraftingSystem : MonoBehaviour
         }
     }
 
-    private void RefreshNeededItems()
+    public void RefreshNeededItems()
     {
         int stone_count = 0;
         int stick_count = 0;

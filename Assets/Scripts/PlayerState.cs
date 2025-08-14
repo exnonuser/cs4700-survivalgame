@@ -11,9 +11,17 @@ public class PlayerState : MonoBehaviour
     // Player Hunger
     public float currentHunger;
     public float maxHunger = 100f;
+
+    float distanceTravelled = 0;
+    Vector3 lastPosition;
+
+    public GameObject playerBody;
+
     // Player Hydration
     public float currentHydration;
     public float maxHydration = 100f;
+    //public bool isHydrationActive;
+
     // Create singleton
     public static PlayerState Instance { get; set; }
 
@@ -39,13 +47,21 @@ public class PlayerState : MonoBehaviour
         currentHunger = maxHunger;
         currentHydration = maxHydration;
         StartCoroutine(HealthRegen(2, 1)); // Start regen loop
-        StartCoroutine(Hydration_Degrade(1, 10)); // Start losing thirst loop
-        StartCoroutine(Hunger_Degrade(1, 10)); // Start losing hunger loop
+        StartCoroutine(Hydration_Degrade(20, 5)); // Start losing thirst loop
     }
 
     // Update is called once per frame
     void Update()
     {
+
+        distanceTravelled += Vector3.Distance(playerBody.transform.position, lastPosition);
+        lastPosition = playerBody.transform.position;
+
+        if (distanceTravelled >= 5)
+        {
+            distanceTravelled = 0;
+            currentHunger -= 1;
+        }
         // Regenerate health every 10 seconds
 
         if (Input.GetKeyDown(KeyCode.N))
@@ -100,6 +116,7 @@ public class PlayerState : MonoBehaviour
     IEnumerator Hydration_Degrade(float degradation_time, float degradation_amount)
     {
         while (true)
+        //while (isHydrationActive)
         {
 
             currentHydration -= degradation_amount;
@@ -135,5 +152,20 @@ public class PlayerState : MonoBehaviour
             }
             yield return new WaitForSeconds(hunger_time);
         }
+    }
+
+    public void setHealth(float newHealth) 
+    {
+        currentHealth = newHealth;
+    }
+
+    public void setHunger(float newHunger) 
+    {
+        currentHunger = newHunger;
+    }
+
+    public void setHydration(float newHydration) 
+    {
+        currentHydration = newHydration;
     }
 }

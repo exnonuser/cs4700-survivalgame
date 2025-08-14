@@ -13,6 +13,7 @@ public class InventorySystem : MonoBehaviour
     public GameObject inventoryScreenUI;
     public bool isOpen;
     public GameObject CrosshairUI;
+    public GameObject ItemInfoUI;
 
     public List<GameObject> slotList = new List<GameObject>();
 
