@@ -50,6 +50,17 @@ public class PlayerState : MonoBehaviour
         StartCoroutine(Hydration_Degrade(20, 5)); // Start losing thirst loop
     }
 
+    public void bound_state(ref float current_var, ref float max_var)
+    {
+        // Upper bounds
+        if (current_var > max_var)
+        {
+            current_var = max_var;
+        } else if (current_var < 0) {
+            current_var = 0;
+        }
+    }
+
     // Update is called once per frame
     void Update()
     {
@@ -93,15 +104,7 @@ public class PlayerState : MonoBehaviour
                 currentHealth -= danger_damage;
             }
             
-            // Make sure current health is within bounds
-            if (currentHealth > maxHealth)
-            {
-                currentHealth = maxHealth; // Make sure regen doesnt go above max health
-            }
-            else if (currentHealth < 0)
-            {
-                currentHealth = 0;
-            }
+            bound_state(ref currentHealth, ref maxHealth);
 
             // Get out of danger if hunger and thirst are sufficient
             float hunger_percent = currentHunger / maxHunger;
@@ -120,10 +123,8 @@ public class PlayerState : MonoBehaviour
         {
 
             currentHydration -= degradation_amount;
-            if (currentHydration < 0)
-            {
-                currentHydration = 0; // Make sure hydration is never below 0
-            }
+
+            bound_state(ref currentHydration, ref maxHydration);
 
             // Take damage when too low
             if ((currentHydration / maxHydration) < danger_threshold)
@@ -140,10 +141,8 @@ public class PlayerState : MonoBehaviour
         {
 
             currentHunger -= hunger_amount;
-            if (currentHunger < 0)
-            {
-                currentHunger = 0; // Make sure hunger is never below 0
-            }
+            
+           bound_state(ref currentHunger, ref maxHunger);
 
             // Take damage when too low
             if ((currentHunger / maxHunger) < danger_threshold)

@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Numerics;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -10,7 +11,7 @@ public class Interaction : MonoBehaviour
     public Camera plr_camera;
     public RaycastHit? current_obj_looked;
     private const float MAX_INTERACT_DISTANCE = 7f;
-    
+
     void interact()
     {
         Debug.Log("Clicked E!");
@@ -18,10 +19,20 @@ public class Interaction : MonoBehaviour
         {
             String obj_name = current_obj_looked?.collider.gameObject.name;
             Debug.Log("Picking up " + obj_name);
-            
+
             InventorySystem.Instance.AddItem(obj_name, 1);
 
             Destroy(current_obj_looked?.collider.gameObject);
+        }
+
+        if (current_obj_looked?.collider.gameObject.CompareTag("Food") == true)
+        {
+            PlayerState.Instance.currentHunger += 20f; // increase hunger
+            PlayerState.Instance.currentHydration += 20f; // increase hunger
+
+            // Make sure values stay within max and min
+            PlayerState.Instance.bound_state(ref PlayerState.Instance.currentHunger, ref PlayerState.Instance.maxHunger);
+            PlayerState.Instance.bound_state(ref PlayerState.Instance.currentHydration, ref PlayerState.Instance.maxHydration);
         }
         
     }
