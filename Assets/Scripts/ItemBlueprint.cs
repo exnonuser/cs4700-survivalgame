@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ItemBlueprint : MonoBehaviour
+public class ItemBlueprint 
 {
     public string itemName;
 
@@ -25,5 +25,16 @@ public class ItemBlueprint : MonoBehaviour
 
         Req1Amount = R1num;
         Req2Amount = R2num; 
+    }
+
+    public ItemBlueprint(string name, int reqNum, string R1, int R1num)
+    {
+        itemName = name;
+
+        numOfRequirements = reqNum; 
+
+        Req1 = R1;
+
+        Req1Amount = R1num;
     }
 }

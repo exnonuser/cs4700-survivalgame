@@ -8,29 +8,50 @@ public class CraftingSystem : MonoBehaviour
 {
     public GameObject craftingScreenUI;
     public GameObject toolsScreenUI;
-    public GameObject CrosshairUI;
+    public GameObject constructionScreenUI;
+    [SerializeField] private List<GameObject> craftingUICollection = new List<GameObject>();
+    public GameObject currentCraftingUI;
+
     public List<string> inventoryItemList = new List<string>();
 
     //category buttons
     public Button toolsBtn; 
+    public Button constructionBtn;
 
     //craft buttons
-    public Button craftAxeButton;
+    public Button craftToolButton;
 
     //requirement text
-    public TextMeshProUGUI AxeReq1, AxeReq2;
+    public TextMeshProUGUI GenericReq1, GenericReq2;
 
     public bool isOpen;
     
     //All blueprint
-    public ItemBlueprint AxeBLP;
+    public ItemBlueprint AxeBLP = new ItemBlueprint("Axe", 2, "Stone", 3, "Stick", 3);
+    public ItemBlueprint PickaxeBLP = new ItemBlueprint("Pickaxe", 1, "Stick", 4);
+    public ItemBlueprint FoundationBLP = new ItemBlueprint("Foundation", 1, "Stick", 4);
+    public ItemBlueprint WallBLP = new ItemBlueprint("Wall", 1, "Stick", 2);
+
 
     public static CraftingSystem Instance {get;set;}
 
-    private void Awake() {
-        AxeBLP = new ItemBlueprint("Axe", 2, "Stone", 3, "Stick", 3);
+    public Dictionary<string, ItemBlueprint> itemMap;
 
-        if (Instance != null && Instance != this) {
+    private void Awake() {
+        craftingUICollection.Add(craftingScreenUI);
+        craftingUICollection.Add(toolsScreenUI);
+        craftingUICollection.Add(constructionScreenUI);
+
+        itemMap = new Dictionary<string, ItemBlueprint>()
+        {
+            { "Axe", AxeBLP },
+            { "Foundation", FoundationBLP },
+            { "Wall", WallBLP },
+            { "Pickaxe", PickaxeBLP }
+        };
+
+        if (Instance != null && Instance != this) 
+        {
             Destroy(gameObject);
         }
         else {
@@ -43,22 +64,63 @@ public class CraftingSystem : MonoBehaviour
     {
         isOpen = false;
 
-        toolsBtn = craftingScreenUI.transform.Find("ToolsButton").GetComponent<Button>();
-        toolsBtn.onClick.AddListener(delegate{OpenToolsCategory();});
+        // Set up category buttons
+        Button toolsBtn = craftingScreenUI.transform.Find("ToolsButton").GetComponent<Button>();
+        toolsBtn.onClick.AddListener(OpenToolsCategory);
 
-        //Axe
-        AxeReq1 = toolsScreenUI.transform.Find("Axe").transform.Find("Req1").GetComponentInChildren<TextMeshProUGUI>();
-        AxeReq2 = toolsScreenUI.transform.Find("Axe").transform.Find("Req2").GetComponentInChildren<TextMeshProUGUI>();
+        Button constructionBtn = craftingScreenUI.transform.Find("ConstructionButton").GetComponent<Button>();
+        constructionBtn.onClick.AddListener(OpenConstructionCategory);
 
-        craftAxeButton = toolsScreenUI.transform.Find("Axe").transform.Find("Button").GetComponent<Button>();
-        craftAxeButton.onClick.AddListener(delegate{CraftAnyItem(AxeBLP);});
+
+    }
+
+    void SetupChildrenUI (GameObject currentCraftingUI) {
+                // Set up all crafting buttons dynamically
+        foreach (Transform child in currentCraftingUI.transform)
+        {
+            if (child.name == "Title")
+                continue; // skip this child
+            
+            // Find requirement texts and button for this tool
+            TextMeshProUGUI req1Text = child.Find("Req1").GetComponentInChildren<TextMeshProUGUI>();
+            TextMeshProUGUI req2Text = child.Find("Req2").GetComponentInChildren<TextMeshProUGUI>();
+            Button craftButton = child.Find("Button").GetComponent<Button>();
+
+            // Capture current child for closure to avoid loop capture issue
+            Transform currentChild = child;
+
+            craftButton.onClick.AddListener(() =>
+            {
+                if (itemMap.TryGetValue(currentChild.name, out ItemBlueprint item))
+                {
+                    CraftAnyItem(item);
+                }
+            });
+        }
+    }
+
+    void OpenCategory(GameObject categoryUI)
+    {
+         foreach (GameObject UI in craftingUICollection)
+        {
+            UI.SetActive(false);
+        }
+
+        categoryUI.SetActive(true);
+        currentCraftingUI = categoryUI;
+
+        SetupChildrenUI(currentCraftingUI);
     }
 
     void OpenToolsCategory ()
     {
-        craftingScreenUI.SetActive(false);
-        toolsScreenUI.SetActive(true);
+        OpenCategory(toolsScreenUI);
     } 
+
+    void OpenConstructionCategory ()
+    {
+        OpenCategory(constructionScreenUI);
+    }
 
     void CraftAnyItem (ItemBlueprint blueprintToCraft) 
     {
@@ -90,15 +152,19 @@ public class CraftingSystem : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        RefreshNeededItems();
+        if (isOpen)
+            RefreshNeededItems();
 
         if (Input.GetKeyDown(KeyCode.C) && !isOpen)
         {
             Debug.Log("C pressed");
             isOpen = true;
-            CrosshairUI.SetActive(!isOpen); //Crosshair is off when crafting is on
             Cursor.lockState = CursorLockMode.None;
             craftingScreenUI.SetActive(true);
+            Cursor.visible = true;
+
+            SelectionManager.Instance.DisableSelection();
+            SelectionManager.Instance.GetComponent<SelectionManager>().enabled = false;
         }
         else if (Input.GetKeyDown(KeyCode.C) && isOpen)
         {
@@ -108,50 +174,76 @@ public class CraftingSystem : MonoBehaviour
             if(!InventorySystem.Instance.isOpen)
             {
                 Cursor.lockState = CursorLockMode.Locked;
-                CrosshairUI.SetActive(!isOpen);
+                Cursor.visible = false;
+
+                SelectionManager.Instance.EnableSelection();
+                SelectionManager.Instance.GetComponent<SelectionManager>().enabled = true;
             }
 
             toolsScreenUI.SetActive(false);
             craftingScreenUI.SetActive(false);
+            constructionScreenUI.SetActive(false);
         }
     }
 
     public void RefreshNeededItems()
     {
-        int stone_count = 0;
-        int stick_count = 0;
+        var inventoryItemList = InventorySystem.Instance.itemList;
+        int haveR1, haveR2 = 0;
+        TextMeshProUGUI req1Text, req2Text = null;
 
-        inventoryItemList = InventorySystem.Instance.itemList;
-
-        foreach(string itemName in inventoryItemList)
+        // Count inventory
+        Dictionary<string, int> counts = new Dictionary<string, int>();
+        foreach (string itemName in inventoryItemList)
         {
-            switch(itemName)
+            if (!counts.ContainsKey(itemName))
+                counts[itemName] = 0;
+            counts[itemName]++;
+        }
+
+        // Loop through all children
+        if (currentCraftingUI != null)
+        {
+            foreach (Transform child in currentCraftingUI.transform)
             {
-                case ("Stone"):
+                if (child.name == "Title")
+                    continue; // skip this child
+                if (itemMap.TryGetValue(child.name, out ItemBlueprint currentItem))
                 {
-                    stone_count += 1;
-                    break;
+                    // Dynamically find each tool's own UI components
+                    req1Text = child.Find("Req1").GetComponent<TextMeshProUGUI>();
+                    if (child.Find("Req2") != null)
+                        req2Text = child.Find("Req2").GetComponent<TextMeshProUGUI>();
+                
+                    Button craftButton = child.Find("Button").GetComponent<Button>();
+
+                    haveR1 = counts.ContainsKey(currentItem.Req1) ? counts[currentItem.Req1] : 0;
+                    req1Text.text = currentItem.Req1Amount + " " + currentItem.Req1 + " [" + haveR1 + "]";
+
+                    if (currentItem.Req2 != null)
+                    {
+                        haveR2 = counts.ContainsKey(currentItem.Req2) ? counts[currentItem.Req2] : 0;
+                        req2Text.text = currentItem.Req2Amount + " " + currentItem.Req2 + " [" + haveR2 + "]";
+                    }
+                    else 
+                        req2Text.text = "";
+
+                    // Show or hide the craft button
+                    switch(currentItem.numOfRequirements)
+                    {
+                        case 1:
+                            craftButton.gameObject.SetActive(haveR1 >= currentItem.Req1Amount);
+                            break;
+                        case 2:
+                            craftButton.gameObject.SetActive(haveR1 >= currentItem.Req1Amount && haveR2 >= currentItem.Req2Amount);
+                            break;
+                    }
                 }
-                case ("Stick"):
+                else
                 {
-                    stick_count += 1;
-                    break;
+                    Debug.LogWarning("No blueprint found for " + child.name);
                 }
             }
         }
-
-        AxeReq1.text = "3 Stone [" + stone_count + "]";
-        AxeReq2.text = "3 Stick [" + stick_count + "]";
-
-        if (stone_count >= 3 && stick_count >= 3)
-        {
-            craftAxeButton.gameObject.SetActive(true);
-        }
-
-        else
-        {
-            craftAxeButton.gameObject.SetActive(false);
-        }
-
     }
 }

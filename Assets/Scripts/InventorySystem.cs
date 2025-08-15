@@ -12,7 +12,6 @@ public class InventorySystem : MonoBehaviour
  
     public GameObject inventoryScreenUI;
     public bool isOpen;
-    public GameObject CrosshairUI;
     public GameObject ItemInfoUI;
 
     public List<GameObject> slotList = new List<GameObject>();
@@ -74,6 +73,8 @@ public class InventorySystem : MonoBehaviour
     {
         isOpen = false;
         //isFull = false;
+        Cursor.visible = false;
+
 
         PopulateSlotList();
     }
@@ -129,9 +130,12 @@ public class InventorySystem : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.I) && !isOpen)
         {
             isOpen = true;
-            CrosshairUI.SetActive(!isOpen); //Crosshair is off when inventory is on
             Cursor.lockState = CursorLockMode.None;
             inventoryScreenUI.SetActive(true);
+            Cursor.visible = true;
+
+            SelectionManager.Instance.DisableSelection();
+            SelectionManager.Instance.GetComponent<SelectionManager>().enabled = false;
             // Update inventory
             //update_inventory();
         }
@@ -143,7 +147,10 @@ public class InventorySystem : MonoBehaviour
             if(!CraftingSystem.Instance.isOpen)
             {
                 Cursor.lockState = CursorLockMode.Locked;
-                CrosshairUI.SetActive(!isOpen);
+                Cursor.visible = false;
+
+                SelectionManager.Instance.EnableSelection();
+                SelectionManager.Instance.GetComponent<SelectionManager>().enabled = true;
             }
         }
     }

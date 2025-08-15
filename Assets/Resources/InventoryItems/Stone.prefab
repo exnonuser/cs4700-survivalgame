@@ -69,7 +69,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 8a5f9829a049c704fa992203bfc451f2, type: 3}
+  m_Sprite: {fileID: 21300000, guid: c5bf1e6f28e3fe74998b7be94c87b4f6, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -132,6 +132,8 @@ MonoBehaviour:
   thisDescription: Material
   thisFunctionality: ' '
   isConsumable: 0
+  isUsable: 0
+  itemPendingToBeUsed: {fileID: 0}
   healthEffect: 0
   hungerEffect: 0
   hydrationEffect: 0

@@ -14,6 +14,7 @@ public class SelectionManager : MonoBehaviour
 
     public GameObject interaction_Info_UI;
     TextMeshProUGUI interaction_text;
+    public GameObject CrosshairUI;
  
     private void Start()
     {
@@ -63,5 +64,20 @@ public class SelectionManager : MonoBehaviour
     {
         currentTarget = null;
         interaction_Info_UI.SetActive(false);
+    }
+
+    public void DisableSelection()
+    {
+        CrosshairUI.SetActive(false);
+        interaction_Info_UI.SetActive(false);
+
+        currentTarget = null;
+    }
+
+    public void EnableSelection()
+    {
+        CrosshairUI.SetActive(true);
+        interaction_Info_UI.SetActive(true);
+
     }
 }
