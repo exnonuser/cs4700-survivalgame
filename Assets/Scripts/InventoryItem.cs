@@ -101,11 +101,18 @@ public class InventoryItem : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
         switch (gameObject.name)
         {
             case "Foundation(Clone)":
-                ConstructionManager.Instance.ActivateConstructionPlacement("FoundationalModel");
+                ConstructionManager.Instance.ActivateConstructionPlacement("FoundationModel");
                 break;
             case "Foundation":
-                ConstructionManager.Instance.ActivateConstructionPlacement("FoundationalModel");
+                ConstructionManager.Instance.ActivateConstructionPlacement("FoundationModel");
                 break;
+            case "Wall(Clone)":
+                ConstructionManager.Instance.ActivateConstructionPlacement("WallModel");
+                break;
+            case "Wall":
+                ConstructionManager.Instance.ActivateConstructionPlacement("WallModel");
+                break;
+            
             default:
                 break;
         }

@@ -10,6 +10,7 @@ public class ConstructionManager : MonoBehaviour
     public GameObject itemToBeConstructed;
     public bool inConstructionMode = false;
     public GameObject constructionHoldingSpot;
+    public GameObject constructionUI;
  
     public bool isValidPlacement;
  
@@ -26,6 +27,8 @@ public class ConstructionManager : MonoBehaviour
     public List<GameObject> allGhostsInExistence = new List<GameObject>();
  
     public GameObject itemToBeDestroyed;
+
+    public GameObject player;
 
     private void Awake()
     {
@@ -145,9 +148,19 @@ public class ConstructionManager : MonoBehaviour
  
     private void Update()
     {
+        if (inConstructionMode)
+        {
+            constructionUI.SetActive(true);
+        }
+        else
+        {
+            constructionUI.SetActive(false);
+        }
  
         if (itemToBeConstructed != null && inConstructionMode)
         {
+            if (itemToBeConstructed.name == "FoundationModel")
+            {
             if (CheckValidConstructionPosition())
             {
                 isValidPlacement = true;
@@ -158,14 +171,20 @@ public class ConstructionManager : MonoBehaviour
                 isValidPlacement = false;
                 itemToBeConstructed.GetComponent<Constructable>().SetInvalidColor();
             }
- 
+            }
  
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
             RaycastHit hit;
             if (Physics.Raycast(ray, out hit))
             {
                 var selectionTransform = hit.transform;
-                if (selectionTransform.gameObject.CompareTag("ghost"))
+                if (selectionTransform.gameObject.CompareTag("ghost") && itemToBeConstructed.name == "FoundationModel")
+                {
+                    itemToBeConstructed.SetActive(false);
+                    selectingAGhost = true;
+                    selectedGhost = selectionTransform.gameObject;
+                }
+                else if (selectionTransform.gameObject.CompareTag("wallGhost") && itemToBeConstructed.name == "WallModel")
                 {
                     itemToBeConstructed.SetActive(false);
                     selectingAGhost = true;
@@ -174,6 +193,7 @@ public class ConstructionManager : MonoBehaviour
                 else
                 {
                     itemToBeConstructed.SetActive(true);
+                    selectedGhost = null;
                     selectingAGhost = false;
                 }
  
@@ -183,7 +203,7 @@ public class ConstructionManager : MonoBehaviour
         // Left Mouse Click to Place item
         if (Input.GetMouseButtonDown(0) && inConstructionMode)
         {
-            if (isValidPlacement && selectedGhost == false) // We don't want the freestyle to be triggered when we select a ghost.
+            if (isValidPlacement && selectedGhost == false && itemToBeConstructed.name == "FoundationModel") // We don't want the freestyle to be triggered when we select a ghost.
             {
                 PlaceItemFreeStyle();
                 DestroyItem(itemToBeDestroyed);
@@ -216,27 +236,41 @@ public class ConstructionManager : MonoBehaviour
  
         // Setting the item to be active again (after we disabled it in the ray cast)
         itemToBeConstructed.gameObject.SetActive(true);
+
         // Setting the parent to be the root of our scene
         itemToBeConstructed.transform.SetParent(transform.parent.transform.parent, true);
+
+        var RandomOffset = UnityEngine.Random.Range(0.01f, 0.03f);
+
+
  
-        itemToBeConstructed.transform.position = ghostPosition;
+        itemToBeConstructed.transform.position = new Vector3(ghostPosition.x, ghostPosition.y, ghostPosition.z + RandomOffset);
         itemToBeConstructed.transform.rotation = ghostRotation;
- 
-        // Making the Ghost Children to no longer be children of this item
-        itemToBeConstructed.GetComponent<Constructable>().ExtractGhostMembers();
+
+        //enabling back the solid collider that we disabled earlier
+        itemToBeConstructed.GetComponent<Constructable>().solidCollider.enabled = true;
+
         // Setting the default color/material
         itemToBeConstructed.GetComponent<Constructable>().SetDefaultColor();
-        itemToBeConstructed.tag = "placedFoundation";
- 
-        // Enabling back the solider collider that we disabled earlier
-        itemToBeConstructed.GetComponent<Constructable>().solidCollider.enabled = true;
- 
-        //Adding all the ghosts of this item into the manager's ghost bank
-        GetAllGhosts(itemToBeConstructed);
-        PerformGhostDeletionScan();
+
+
+        if (itemToBeConstructed.name == "FoundationModel")
+        {
+            // Making the Ghost Children to no longer be children of this item
+            itemToBeConstructed.GetComponent<Constructable>().ExtractGhostMembers();
+            itemToBeConstructed.tag = "placedFoundation";
+            //Adding all the ghosts of this item into the manager's ghost bank
+            GetAllGhosts(itemToBeConstructed);
+            PerformGhostDeletionScan();
+        }
+        else
+        {
+            itemToBeConstructed.tag = "placedWall";
+            DestroyItem(selectedGhost); //delete wall ghost because manager wont
+        }
  
         itemToBeConstructed = null;
- 
+
         inConstructionMode = false;
     }
 

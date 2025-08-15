@@ -13,6 +13,8 @@ TagManager:
   - pickable
   - placedFoundation
   - QuickSlot
+  - wallGhost
+  - placedWall
   layers:
   - Default
   - TransparentFX
