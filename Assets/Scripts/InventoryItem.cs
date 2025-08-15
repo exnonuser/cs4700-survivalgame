@@ -25,7 +25,7 @@ public class InventoryItem : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
 
     // --- Equipable --- //
     public bool isUsable;
-    public GameObject itemPendingToBeUsed;
+
 
  
     public float healthEffect;
@@ -72,8 +72,8 @@ public class InventoryItem : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
 
         if (isUsable)
         {
-            itemPendingToBeUsed = gameObject;
-
+            ConstructionManager.Instance.itemToBeDestroyed = gameObject;
+            gameObject.SetActive(false);
             UseItem();
         }
     }
@@ -118,13 +118,6 @@ public class InventoryItem : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
         if (eventData.button == PointerEventData.InputButton.Right)
         {
             if (isConsumable && itemPendingConsumption == gameObject)
-            {
-                DestroyImmediate(gameObject);
-                InventorySystem.Instance.RecalculateList();
-                CraftingSystem.Instance.RefreshNeededItems();
-            }
-
-            if (isUsable && itemPendingToBeUsed == gameObject)
             {
                 DestroyImmediate(gameObject);
                 InventorySystem.Instance.RecalculateList();

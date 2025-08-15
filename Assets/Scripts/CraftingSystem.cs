@@ -155,7 +155,7 @@ public class CraftingSystem : MonoBehaviour
         if (isOpen)
             RefreshNeededItems();
 
-        if (Input.GetKeyDown(KeyCode.C) && !isOpen)
+        if (Input.GetKeyDown(KeyCode.C) && !isOpen && !ConstructionManager.Instance.inConstructionMode)
         {
             Debug.Log("C pressed");
             isOpen = true;

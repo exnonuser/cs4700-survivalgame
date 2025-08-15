@@ -5,6 +5,7 @@ using UnityEngine;
 public class PlayerLookSync : MonoBehaviour
 {
     public Transform cameraTransform; // assign your camera here in the Inspector
+    public Transform ConstructionHolder;
 
     void Update()
     {
@@ -13,5 +14,7 @@ public class PlayerLookSync : MonoBehaviour
 
         // Apply it to the player (preserve current X and Z)
         transform.rotation = Quaternion.Euler(0, cameraY, 0);
+        
+        ConstructionHolder.rotation = cameraTransform.rotation;
     }
 }

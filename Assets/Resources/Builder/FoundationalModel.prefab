@@ -140,7 +140,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9875068be0b869d429d4ef8b194693b5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  solidCollider: {fileID: 0}
+  solidCollider: {fileID: 3397736524873224407}
   mRenderer: {fileID: 0}
   isPlaced: 0
   hasSamePosition: 0
@@ -284,7 +284,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9875068be0b869d429d4ef8b194693b5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  solidCollider: {fileID: 0}
+  solidCollider: {fileID: 3138022537470449517}
   mRenderer: {fileID: 0}
   isPlaced: 0
   hasSamePosition: 0
@@ -304,7 +304,7 @@ GameObject:
   - component: {fileID: 3403955402597092093}
   - component: {fileID: 5972613199120207639}
   m_Layer: 0
-  m_Name: FoundationModel
+  m_Name: FoundationalModel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -613,7 +613,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9875068be0b869d429d4ef8b194693b5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  solidCollider: {fileID: 0}
+  solidCollider: {fileID: 1889841455272835959}
   mRenderer: {fileID: 0}
   isPlaced: 0
   hasSamePosition: 0
@@ -757,7 +757,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9875068be0b869d429d4ef8b194693b5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  solidCollider: {fileID: 0}
+  solidCollider: {fileID: 3422900526889992574}
   mRenderer: {fileID: 0}
   isPlaced: 0
   hasSamePosition: 0
@@ -901,7 +901,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9875068be0b869d429d4ef8b194693b5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  solidCollider: {fileID: 0}
+  solidCollider: {fileID: 8266614774251168796}
   mRenderer: {fileID: 0}
   isPlaced: 0
   hasSamePosition: 0
@@ -1045,7 +1045,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9875068be0b869d429d4ef8b194693b5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  solidCollider: {fileID: 0}
+  solidCollider: {fileID: 6871236586657015978}
   mRenderer: {fileID: 0}
   isPlaced: 0
   hasSamePosition: 0
@@ -1189,7 +1189,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9875068be0b869d429d4ef8b194693b5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  solidCollider: {fileID: 0}
+  solidCollider: {fileID: 6055383652659248059}
   mRenderer: {fileID: 0}
   isPlaced: 0
   hasSamePosition: 0
@@ -1333,7 +1333,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9875068be0b869d429d4ef8b194693b5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  solidCollider: {fileID: 0}
+  solidCollider: {fileID: 5394322254844575223}
   mRenderer: {fileID: 0}
   isPlaced: 0
   hasSamePosition: 0
