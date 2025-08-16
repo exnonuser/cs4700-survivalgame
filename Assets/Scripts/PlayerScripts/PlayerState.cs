@@ -48,6 +48,7 @@ public class PlayerState : MonoBehaviour
         currentHydration = maxHydration;
         StartCoroutine(HealthRegen(2, 1)); // Start regen loop
         StartCoroutine(Hydration_Degrade(20, 5)); // Start losing thirst loop
+        StartCoroutine(Hunger_Degrade(20, 5)); // Start losing thirst loop
     }
 
     public void bound_state(ref float current_var, ref float max_var)
