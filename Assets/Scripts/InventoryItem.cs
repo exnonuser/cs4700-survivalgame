@@ -112,7 +112,12 @@ public class InventoryItem : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
             case "Wall":
                 ConstructionManager.Instance.ActivateConstructionPlacement("WallModel");
                 break;
-            
+            case "Bonfire":
+                ConstructionManager.Instance.ActivateConstructionPlacement("BonfireModel");
+                break;
+            case "Bonfire(Clone)":
+                ConstructionManager.Instance.ActivateConstructionPlacement("BonfireModel");
+                break;
             default:
                 break;
         }

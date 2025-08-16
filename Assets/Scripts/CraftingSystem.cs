@@ -31,6 +31,7 @@ public class CraftingSystem : MonoBehaviour
     public ItemBlueprint PickaxeBLP = new ItemBlueprint("Pickaxe", 1, "Stick", 4);
     public ItemBlueprint FoundationBLP = new ItemBlueprint("Foundation", 1, "Stick", 4);
     public ItemBlueprint WallBLP = new ItemBlueprint("Wall", 1, "Stick", 2);
+    public ItemBlueprint BonfireBLP = new ItemBlueprint("Bonfire", 2, "Stick", 2, "Coal", 2);
 
 
     public static CraftingSystem Instance {get;set;}
@@ -47,7 +48,8 @@ public class CraftingSystem : MonoBehaviour
             { "Axe", AxeBLP },
             { "Foundation", FoundationBLP },
             { "Wall", WallBLP },
-            { "Pickaxe", PickaxeBLP }
+            { "Pickaxe", PickaxeBLP },
+            { "Bonfire", BonfireBLP}
         };
 
         if (Instance != null && Instance != this) 

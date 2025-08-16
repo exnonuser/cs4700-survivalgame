@@ -45,11 +45,17 @@ public class ConstructionManager : MonoBehaviour
     public void ActivateConstructionPlacement(string itemToConstruct)
     {
         GameObject item = Instantiate(Resources.Load<GameObject>("Builder/" + itemToConstruct));
+
+        Debug.Log($"Before parent → local:{item.transform.localPosition} world:{item.transform.position}");
  
         //change the name of the gameobject so it will not be (clone)
         item.name = itemToConstruct;
  
         item.transform.SetParent(constructionHoldingSpot.transform, false);
+
+        Debug.Log($"After parent  → local:{item.transform.localPosition} world:{item.transform.position}");
+
+        
         itemToBeConstructed = item;
         itemToBeConstructed.gameObject.tag = "activeConstructable";
  
@@ -159,7 +165,7 @@ public class ConstructionManager : MonoBehaviour
  
         if (itemToBeConstructed != null && inConstructionMode)
         {
-            if (itemToBeConstructed.name == "FoundationModel")
+            if (itemToBeConstructed.name == "FoundationModel" || itemToBeConstructed.name == "BonfireModel")
             {
             if (CheckValidConstructionPosition())
             {
@@ -203,7 +209,7 @@ public class ConstructionManager : MonoBehaviour
         // Left Mouse Click to Place item
         if (Input.GetMouseButtonDown(0) && inConstructionMode)
         {
-            if (isValidPlacement && selectedGhost == false && itemToBeConstructed.name == "FoundationModel") // We don't want the freestyle to be triggered when we select a ghost.
+            if (isValidPlacement && selectedGhost == false && (itemToBeConstructed.name == "FoundationModel" || itemToBeConstructed.name == "BonfireModel")) // We don't want the freestyle to be triggered when we select a ghost.
             {
                 PlaceItemFreeStyle();
                 DestroyItem(itemToBeDestroyed);
@@ -215,7 +221,7 @@ public class ConstructionManager : MonoBehaviour
                 DestroyItem(itemToBeDestroyed);
             }
         }
-        // Right Mouse Click to Cancel                      //TODO - don't destroy the ui item until you actually placed it.
+        // Right Mouse Click to Cancel                     
         if (Input.GetKeyDown(KeyCode.X))
         {     // Left Mouse Button
             itemToBeDestroyed.SetActive(true);
