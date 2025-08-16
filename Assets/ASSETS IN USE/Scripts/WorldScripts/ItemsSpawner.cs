@@ -13,16 +13,19 @@ public class ItemsSpawner : MonoBehaviour
     public GameObject stick_model;
     public GameObject apple_model;
     public GameObject stones_model;
+    public GameObject coal_model;
     public GameObject land;
 
     // Max values
     private const int MAX_STICKS = 100;
     private const int MAX_APPLES = 20;
     private const int MAX_STONES = 50;
+    private const int MAX_COAL = 20;
     // Current values
     private int current_sticks = 0;
     private int current_stones = 0;
     private int current_apples = 0;
+    private int current_coals = 0;
 
     public static ItemsSpawner Instance { get; set; }
     void Awake()
@@ -39,11 +42,10 @@ public class ItemsSpawner : MonoBehaviour
     }
     void Start()
     {
-       
-
         StartCoroutine("Stick_Spawn_Loop");
         StartCoroutine("Stone_Spawn_Loop");
         StartCoroutine("Apple_Spawn_Loop" );
+        StartCoroutine("Coal_Spawn_Loop" );
     }
    
 
@@ -51,7 +53,6 @@ public class ItemsSpawner : MonoBehaviour
     {
         while (true)
         {
-            Debug.Log("Spawned Stick");
             SpawnItem(stick_model, ref current_sticks, MAX_STICKS);
             yield return new WaitForSeconds(Loop_Time);
         }
@@ -70,6 +71,15 @@ public class ItemsSpawner : MonoBehaviour
         {
             SpawnItem(stones_model, ref current_stones, MAX_STONES);
             yield return new WaitForSeconds(Loop_Time * 2);
+        }
+    }
+
+    IEnumerator Coal_Spawn_Loop()
+    {
+        while (true)
+        {
+            SpawnItem(coal_model, ref current_coals, MAX_COAL);
+            yield return new WaitForSeconds(Loop_Time * 5);
         }
     }
 
