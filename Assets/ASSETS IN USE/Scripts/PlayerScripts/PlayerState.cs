@@ -48,7 +48,7 @@ public class PlayerState : MonoBehaviour
         currentHydration = maxHydration;
         StartCoroutine(HealthRegen(2, 1)); // Start regen loop
         StartCoroutine(Hydration_Degrade(20, 5)); // Start losing thirst loop
-        StartCoroutine(Hunger_Degrade(20, 5)); // Start losing thirst loop
+        StartCoroutine(Hunger_Degrade(2, 1)); // Start losing thirst loop
     }
 
     public void bound_state(ref float current_var, ref float max_var)
@@ -69,7 +69,7 @@ public class PlayerState : MonoBehaviour
         distanceTravelled += Vector3.Distance(playerBody.transform.position, lastPosition);
         lastPosition = playerBody.transform.position;
 
-        if (distanceTravelled >= 5)
+        if (distanceTravelled >= 15)
         {
             distanceTravelled = 0;
             currentHunger -= 1;
