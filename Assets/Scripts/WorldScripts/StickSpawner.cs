@@ -51,10 +51,13 @@ public class StickSpawner : MonoBehaviour
     {
         if (current_sticks < MAX_STICKS)
         {
+            Terrain terrain = land.GetComponent<Terrain>();
             int spawnX = Random.Range(0, 100);
-            int spawnY = Random.Range(20, 20);
+            int spawnY = Random.Range(0, 100);
             int spawnZ = Random.Range(0, 100);
             Vector3 spawn_pos = new Vector3(spawnX, spawnY, spawnZ) + land.transform.position;
+            spawn_pos.y = terrain.SampleHeight(spawn_pos);
+
             GameObject stick = Instantiate(stick_model, spawn_pos, Quaternion.identity);
             current_sticks++;
 
