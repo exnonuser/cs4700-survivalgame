@@ -91,6 +91,7 @@ public class CraftingSystem : MonoBehaviour
             // Capture current child for closure to avoid loop capture issue
             Transform currentChild = child;
 
+            craftButton.onClick.RemoveAllListeners();
             craftButton.onClick.AddListener(() =>
             {
                 if (itemMap.TryGetValue(currentChild.name, out ItemBlueprint item))
